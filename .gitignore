@@ -1,0 +1,10 @@
+build/
+*.o
+*.out
+chatbot_server
+.vscode/
+*.db
+*.log
+node_modules/
+.git/
+.DS_Store
