@@ -62,6 +62,33 @@ int main() {
         res.set_content(stats, "application/json");
     });
 
+        // Instagram webhook verification (GET) and notification (POST) endpoint
+svr.Get("/webhook", [](const httplib::Request& req, httplib::Response& res) {
+    // Instagram/Meta verification for webhook registration
+    auto challenge = req.get_param_value("hub.challenge");
+    if (!challenge.empty()) {
+        res.set_content(challenge, "text/plain");
+        res.status = 200;
+    } else {
+        res.set_content("Missing challenge", "text/plain");
+        res.status = 400;
+    }
+});
+
+// Webhook notification (Instagram sends POST JSON)
+svr.Post("/webhook", [&db, &classifier](const httplib::Request& req, httplib::Response& res) {
+    // Example: Save raw JSON, respond 200 OK
+    std::string payload = req.body;
+
+    // You may want to log or process payload data
+    // For real use, parse JSON to extract Instagram message info, sender, etc.
+    db.logMessage("instagram", payload, "received", "INSTAGRAM_WEBHOOK");
+
+    res.set_content(R"({"status":"received"})", "application/json");
+    res.status = 200;
+});
+
+
     std::cout << "Starting chatbot server on port 8080..." << std::endl;
     std::cout << "Server running at http://0.0.0.0:8080" << std::endl;
     

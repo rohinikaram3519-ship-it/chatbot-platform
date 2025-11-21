@@ -7,4 +7,4 @@ chatbot_server
 *.log
 node_modules/
 .git/
-.DS_Store
+.DS_Storebuild/
